@@ -2,13 +2,19 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-export const environment = {
+import { Config } from 'aws-sdk';
+
+export const env = {
   production: false,
 
   aws: {
-    access_key: '',
-    secret_access_key: '',
-    photo_bucket: ''
+    config: new Config({
+      region: 'eu-central-1',
+      accessKeyId: '',
+      secretAccessKey: ''
+    }),
+
+    photoBucket: ''
   }
 };
 

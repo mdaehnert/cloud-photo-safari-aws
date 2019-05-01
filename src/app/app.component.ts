@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { S3 } from "aws-sdk";
+import { env } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -9,12 +10,25 @@ import { S3 } from "aws-sdk";
 export class AppComponent implements OnInit {
   title = 'cloud-photo-safari-aws';
 
-  constructor() {
-    console.log(123);
-  }
 
-  public ngOnInit() {
-    var x = new S3().getSignedUrl('GetObject', {Bucket: 'foo', Key: 'bar'});
-    console.log(x);
+  public async ngOnInit() {
+    var s3 = await new S3(env.aws.config);
+
+    var ids = await s3.listObjectsV2( { Bucket: env.aws.photoBucket }).promise();
+
+    var signedUrlOptions = {
+      Bucket: env.aws.photoBucket,
+      Expires: 60,
+      Key: ids.Contents[0].Key
+    };
+
+    var signedUrl = await new Promise((resolve, reject) => {
+      s3.getSignedUrl('getObject', signedUrlOptions, (err, url) => {
+        if (err) reject(err)
+        else resolve(url)
+      });
+    });
+
+    console.log(signedUrl);
   }
 }
