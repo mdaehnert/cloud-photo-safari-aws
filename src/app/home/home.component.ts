@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
   public async ngOnInit() {
     this.s3 = await new S3(env.aws.config);
 
-    let timerObservable = timer(0, 10000);
+    let timerObservable = timer(0, 100000);
     timerObservable.subscribe(() => this.timerCallback());
   }
 
@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
 
 
     private async timerCallback() {
-      var ids = await this.s3.listObjectsV2( { Bucket: env.aws.photoBucket }).promise();
+      var ids = await this.s3.listObjectsV2( { Bucket: env.aws.photoBucket, Prefix: 'foo/', StartAfter: 'foo/' }).promise();
 
       var signedUrlOptions = {
         Bucket: env.aws.photoBucket,
@@ -35,12 +35,15 @@ export class HomeComponent implements OnInit {
         Key: ids.Contents[0].Key
       };
 
+      console.log(ids.Contents);
+
       var signedUrl = await new Promise((resolve, reject) => {
         this.s3.getSignedUrl('getObject', signedUrlOptions, (err, url) => {
           if (err) reject(err)
           else resolve(url)
         });
       });
+
 
       console.log(signedUrl);
 
