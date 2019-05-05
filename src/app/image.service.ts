@@ -14,7 +14,7 @@ export class ImageService {
   }
 
   public async getNewImageCallback(): Promise<{}> {
-    var ids = await this.s3.listObjectsV2({ Bucket: env.aws.photoBucket, Prefix: 'foo/', StartAfter: 'foo/' }).promise();
+    var ids = await this.s3.listObjectsV2({ Bucket: env.aws.photoBucket, Prefix: 'v1/', StartAfter: 'v1/' }).promise();
 
     var signedUrlOptions = {
       Bucket: env.aws.photoBucket,

@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit {
   public constructor(private imageService: ImageService) { }
 
   public async ngOnInit() {
-    let timerObservable = timer(3000, 100000);
+    let timerObservable = timer(3000, 1000 * 60 * 15); // ms * sec * min
     timerObservable.subscribe(() => {
       this.imageService.getNewImageCallback().then((imageUrl) => {
         this.background1.nativeElement.style.backgroundImage = `url('${imageUrl}')`;
